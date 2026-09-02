@@ -1,0 +1,70 @@
+EDMS - SINGLE POSTGRESQL DATABASE SETUP
+========================================
+
+LOCAL / NEW SYSTEM
+------------------
+1. Open PostgreSQL:
+   psql -U postgres
+
+2. Create database:
+   CREATE DATABASE employee_edms;
+
+3. Connect:
+   \c employee_edms
+
+4. Start FastAPI once so SQLAlchemy creates the base tables:
+   cd backend
+   venv\Scripts\activate
+   uvicorn app.main:app --reload
+
+5. Stop FastAPI with CTRL+C.
+
+6. Run the ONE migration file from the project root:
+   psql -U postgres -d employee_edms -f backend/migration.sql
+
+The old role_migration.sql and storage_migration.sql files are no longer used.
+
+7. Start FastAPI again.
+
+EXISTING EDMS DATABASE
+----------------------
+Back up the database first, then run:
+
+psql -U postgres -d employee_edms -f backend/migration.sql
+
+The migration combines:
+- document status/rejection fields
+- employee storage fields
+- registration terms fields
+- storage request changes
+- removal of obsolete storage request columns
+- existing non-admin legacy accounts migration where appropriate
+
+VERIFY
+------
+SELECT id, full_name, email, role, status, is_active,
+       storage_limit_gb, storage_limit_bytes
+FROM users
+ORDER BY id;
+
+SELECT column_name, data_type, is_nullable
+FROM information_schema.columns
+WHERE table_name = 'storage_requests'
+ORDER BY ordinal_position;
+
+SELECT column_name, data_type, is_nullable
+FROM information_schema.columns
+WHERE table_name = 'documents'
+ORDER BY ordinal_position;
+
+\dt
+\conninfo
+\q
+
+NEON
+----
+For Neon, use the Neon connection string as DATABASE_URL. It should normally contain sslmode=require. Run migration.sql using a PostgreSQL client/psql connected to the Neon database.
+
+SUPABASE STORAGE
+----------------
+The production application uses Supabase Storage instead of local disk. The database migration does not create the Supabase bucket. Create a PRIVATE bucket named edms-files in Supabase Storage and configure the backend environment variables described in DEPLOYMENT.md.

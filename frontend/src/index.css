@@ -1,0 +1,1090 @@
+@import "tailwindcss";
+
+/* =========================================================
+   EDMS — Manual Dark Mode Support
+   ========================================================= */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* =========================================================
+   EDMS — Premium Enterprise SaaS Design System
+   ========================================================= */
+
+:root {
+  /* ---------- Core surfaces ---------- */
+  --color-bg: #f6f8fc;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f8fafc;
+  --color-surface-muted: #f1f5f9;
+
+  /* ---------- Borders ---------- */
+  --color-border: #e5e7eb;
+  --color-border-soft: #edf0f4;
+  --color-border-strong: #d7dce5;
+
+  /* ---------- Typography ---------- */
+  --color-text: #111827;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+  --color-text-subtle: #94a3b8;
+
+  /* ---------- Brand ---------- */
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-primary-active: #3730a3;
+  --color-primary-soft: #eef2ff;
+  --color-primary-soft-hover: #e0e7ff;
+
+  /* ---------- Semantic ---------- */
+  --color-success: #059669;
+  --color-success-soft: #ecfdf5;
+
+  --color-warning: #d97706;
+  --color-warning-soft: #fffbeb;
+
+  --color-danger: #dc2626;
+  --color-danger-soft: #fef2f2;
+
+  --color-info: #0284c7;
+  --color-info-soft: #f0f9ff;
+
+  /* ---------- Radius ---------- */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-2xl: 22px;
+
+  /* ---------- Shadows ---------- */
+  --shadow-xs:
+    0 1px 2px rgba(15, 23, 42, 0.04);
+
+  --shadow-sm:
+    0 1px 3px rgba(15, 23, 42, 0.06),
+    0 1px 2px rgba(15, 23, 42, 0.04);
+
+  --shadow-md:
+    0 8px 24px rgba(15, 23, 42, 0.06),
+    0 2px 6px rgba(15, 23, 42, 0.04);
+
+  --shadow-lg:
+    0 20px 45px rgba(15, 23, 42, 0.08),
+    0 6px 16px rgba(15, 23, 42, 0.04);
+
+  /* ---------- Motion ---------- */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+  --transition-smooth: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* =========================================================
+   DARK THEME VARIABLES
+   ========================================================= */
+
+html.dark {
+  /* ---------- Core surfaces ---------- */
+  --color-bg: #0b1120;
+  --color-surface: #111827;
+  --color-surface-soft: #172033;
+  --color-surface-muted: #1e293b;
+
+  /* ---------- Borders ---------- */
+  --color-border: #273449;
+  --color-border-soft: #202c3f;
+  --color-border-strong: #334155;
+
+  /* ---------- Typography ---------- */
+  --color-text: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-text-subtle: #64748b;
+
+  /* ---------- Brand ---------- */
+  --color-primary: #6366f1;
+  --color-primary-hover: #818cf8;
+  --color-primary-active: #4f46e5;
+  --color-primary-soft: #1e1b4b;
+  --color-primary-soft-hover: #312e81;
+
+  /* ---------- Semantic ---------- */
+  --color-success: #10b981;
+  --color-success-soft: #052e24;
+
+  --color-warning: #f59e0b;
+  --color-warning-soft: #451a03;
+
+  --color-danger: #ef4444;
+  --color-danger-soft: #450a0a;
+
+  --color-info: #38bdf8;
+  --color-info-soft: #082f49;
+}
+
+
+/* =========================================================
+   Base
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+  background: var(--color-bg);
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(99, 102, 241, 0.045),
+      transparent 28rem
+    ),
+    var(--color-bg);
+
+  color: var(--color-text);
+
+  font-size: 14px;
+  line-height: 1.5;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+
+/* =========================================================
+   Dark Body
+   ========================================================= */
+
+html.dark body {
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(99, 102, 241, 0.10),
+      transparent 28rem
+    ),
+    var(--color-bg);
+
+  color: var(--color-text);
+}
+
+
+/* =========================================================
+   Theme Transition
+   ========================================================= */
+
+html,
+body,
+#root,
+div,
+section,
+main,
+aside,
+header,
+nav,
+button,
+input,
+select,
+textarea {
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+
+/* =========================================================
+   Selection
+   ========================================================= */
+
+::selection {
+  background: rgba(79, 70, 229, 0.16);
+  color: var(--color-text);
+}
+
+
+/* =========================================================
+   Typography
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 2vw, 2.25rem);
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.125rem;
+  line-height: 1.35;
+  font-weight: 650;
+}
+
+p {
+  color: var(--color-text-secondary);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* =========================================================
+   Form Controls
+   ========================================================= */
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+input,
+select,
+textarea {
+  color: var(--color-text);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-subtle);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(79, 70, 229, 0.18);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   Scrollbars
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+
+/* ---------- Dark scrollbar ---------- */
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-color: transparent;
+  background-clip: padding-box;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+  border-color: transparent;
+  background-clip: padding-box;
+}
+
+
+/* ---------- Firefox ---------- */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+html.dark * {
+  scrollbar-color: #475569 transparent;
+}
+
+
+/* =========================================================
+   Reusable SaaS Utilities
+   ========================================================= */
+
+.saas-surface {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.saas-surface-hover {
+  transition:
+    border-color var(--transition-normal),
+    box-shadow var(--transition-normal),
+    transform var(--transition-normal);
+}
+
+.saas-surface-hover:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.saas-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--color-border-soft);
+}
+
+.saas-muted {
+  color: var(--color-text-muted);
+}
+
+.saas-subtle {
+  color: var(--color-text-subtle);
+}
+
+
+/* =========================================================
+   Premium Button Helpers
+   ========================================================= */
+
+.saas-primary {
+  background: var(--color-primary);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+
+  box-shadow:
+    0 1px 2px rgba(79, 70, 229, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+  transition:
+    background var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.saas-primary:hover {
+  background: var(--color-primary-hover);
+
+  box-shadow:
+    0 5px 12px rgba(79, 70, 229, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.saas-primary:active {
+  background: var(--color-primary-active);
+  transform: translateY(1px);
+}
+
+.saas-secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.saas-secondary:hover {
+  background: var(--color-surface-soft);
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+}
+
+
+/* =========================================================
+   Status Helpers
+   ========================================================= */
+
+.status-success {
+  color: var(--color-success);
+  background: var(--color-success-soft);
+}
+
+.status-warning {
+  color: var(--color-warning);
+  background: var(--color-warning-soft);
+}
+
+.status-danger {
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.status-info {
+  color: var(--color-info);
+  background: var(--color-info-soft);
+}
+
+.status-neutral {
+  color: var(--color-text-secondary);
+  background: var(--color-surface-muted);
+}
+
+
+/* =========================================================
+   Dark Status Helpers
+   ========================================================= */
+
+html.dark .status-success {
+  color: #34d399;
+  background: #064e3b;
+}
+
+html.dark .status-warning {
+  color: #fbbf24;
+  background: #451a03;
+}
+
+html.dark .status-danger {
+  color: #f87171;
+  background: #450a0a;
+}
+
+html.dark .status-info {
+  color: #38bdf8;
+  background: #082f49;
+}
+
+html.dark .status-neutral {
+  color: #cbd5e1;
+  background: #1e293b;
+}
+
+
+/* =========================================================
+   Selection / Drag States
+   ========================================================= */
+
+[data-dragging="true"] {
+  opacity: 0.65;
+}
+
+
+/* =========================================================
+   Motion
+   ========================================================= */
+
+@keyframes saas-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes saas-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.saas-fade-in {
+  animation: saas-fade-in 220ms ease-out both;
+}
+
+.saas-scale-in {
+  animation: saas-scale-in 180ms ease-out both;
+}
+
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 768px) {
+  body {
+    font-size: 13px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  .saas-surface {
+    border-radius: var(--radius-lg);
+  }
+}
+
+
+/* =========================================================
+   Reduced Motion
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+/* =========================================================
+   EDMS — DARK MODE COMPATIBILITY LAYER
+   Keeps existing Tailwind UI intact.
+   Only applies when .dark is active.
+   ========================================================= */
+
+/* ---------- Main backgrounds ---------- */
+
+html.dark .bg-white {
+  background-color: #111827 !important;
+}
+
+html.dark .bg-white\/95 {
+  background-color: rgba(17, 24, 39, 0.95) !important;
+}
+
+html.dark .bg-slate-50 {
+  background-color: #172033 !important;
+}
+
+html.dark .bg-slate-100 {
+  background-color: #1e293b !important;
+}
+
+html.dark .bg-slate-200 {
+  background-color: #273449 !important;
+}
+
+
+/* ---------- Text ---------- */
+
+html.dark .text-slate-950 {
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-900 {
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-800 {
+  color: #e2e8f0 !important;
+}
+
+html.dark .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .text-slate-600 {
+  color: #94a3b8 !important;
+}
+
+html.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+html.dark .text-slate-400 {
+  color: #64748b !important;
+}
+
+
+/* ---------- Borders ---------- */
+
+html.dark .border-slate-200 {
+  border-color: #273449 !important;
+}
+
+html.dark .border-slate-100 {
+  border-color: #202c3f !important;
+}
+
+html.dark .border-slate-300 {
+  border-color: #334155 !important;
+}
+
+
+/* ---------- Hover backgrounds ---------- */
+
+html.dark .hover\:bg-slate-50:hover {
+  background-color: #172033 !important;
+}
+
+html.dark .hover\:bg-slate-100:hover {
+  background-color: #1e293b !important;
+}
+
+html.dark .hover\:bg-slate-200:hover {
+  background-color: #273449 !important;
+}
+
+
+/* ---------- Hover text ---------- */
+
+html.dark .hover\:text-slate-800:hover {
+  color: #f8fafc !important;
+}
+
+html.dark .hover\:text-slate-900:hover {
+  color: #ffffff !important;
+}
+
+
+/* ---------- Indigo soft backgrounds ---------- */
+
+html.dark .bg-indigo-50 {
+  background-color: #1e1b4b !important;
+}
+
+html.dark .bg-indigo-100 {
+  background-color: #312e81 !important;
+}
+
+html.dark .text-indigo-700 {
+  color: #a5b4fc !important;
+}
+
+html.dark .text-indigo-600 {
+  color: #818cf8 !important;
+}
+
+
+/* ---------- Green ---------- */
+
+html.dark .bg-green-50 {
+  background-color: #052e24 !important;
+}
+
+html.dark .text-green-700 {
+  color: #34d399 !important;
+}
+
+html.dark .text-green-600 {
+  color: #34d399 !important;
+}
+
+
+/* ---------- Amber ---------- */
+
+html.dark .bg-amber-50 {
+  background-color: #451a03 !important;
+}
+
+html.dark .text-amber-800 {
+  color: #fbbf24 !important;
+}
+
+html.dark .text-amber-700 {
+  color: #fbbf24 !important;
+}
+
+
+/* ---------- Red ---------- */
+
+html.dark .bg-red-50 {
+  background-color: #450a0a !important;
+}
+
+html.dark .text-red-700 {
+  color: #f87171 !important;
+}
+
+html.dark .text-red-600 {
+  color: #f87171 !important;
+}
+
+
+/* ---------- Purple / Violet ---------- */
+
+html.dark .bg-purple-50 {
+  background-color: #2e1065 !important;
+}
+
+html.dark .bg-violet-50 {
+  background-color: #2e1065 !important;
+}
+
+
+/* ---------- Tables ---------- */
+
+html.dark table {
+  color: #e2e8f0;
+}
+
+html.dark thead {
+  background-color: #172033 !important;
+}
+
+html.dark tbody {
+  background-color: #111827;
+}
+
+html.dark tr {
+  border-color: #273449 !important;
+}
+
+
+/* ---------- Inputs ---------- */
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #172033 !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+
+/* ---------- Modals ---------- */
+
+html.dark .shadow-sm,
+html.dark .shadow-md,
+html.dark .shadow-lg {
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25) !important;
+}
+
+
+/* ---------- Main page background ---------- */
+
+html.dark main {
+  background-color: #0b1120;
+}
+
+
+/* ---------- Sticky / fixed headers ---------- */
+
+html.dark header {
+  background-color: rgba(17, 24, 39, 0.96) !important;
+  border-color: #273449 !important;
+}
+
+
+/* ---------- Sidebar ---------- */
+
+html.dark aside {
+  background-color: #111827 !important;
+  border-color: #273449 !important;
+}
+
+
+/* ---------- Horizontal dividers ---------- */
+
+html.dark .border-t {
+  border-color: #273449 !important;
+}
+
+html.dark .border-b {
+  border-color: #273449 !important;
+}
+
+
+/* ---------- Cards using generic white backgrounds ---------- */
+
+html.dark .rounded-xl.bg-white,
+html.dark .rounded-2xl.bg-white,
+html.dark .rounded-3xl.bg-white {
+  background-color: #111827 !important;
+}
+
+
+/* ---------- Search boxes ---------- */
+
+html.dark input.bg-white,
+html.dark .bg-white input {
+  background-color: #172033 !important;
+}
+
+
+/* ---------- Dropdowns ---------- */
+
+html.dark [role="menu"],
+html.dark [role="dialog"] {
+  background-color: #111827 !important;
+  border-color: #273449 !important;
+}
+
+
+/* ---------- Dark mode selection ---------- */
+
+html.dark ::selection {
+  background-color: rgba(99, 102, 241, 0.35);
+  color: #ffffff;
+}
+
+/* =========================================================
+   EDMS — Dark Mode Final UI Fixes
+   ========================================================= */
+
+html.dark {
+  color-scheme: dark;
+}
+
+/* Upload / document section headers */
+html.dark .bg-white {
+  background-color: #111827 !important;
+}
+
+/* Any white surface inside dark mode */
+html.dark .bg-white\/90 {
+  background-color: rgba(17, 24, 39, 0.90) !important;
+}
+
+html.dark .bg-white\/95 {
+  background-color: rgba(17, 24, 39, 0.95) !important;
+}
+
+/* Keep dark text readable */
+html.dark .text-white {
+  color: #f8fafc !important;
+}
+
+/* Sidebar bottom/profile area */
+html.dark aside .bg-slate-50 {
+  background-color: #111827 !important;
+}
+
+html.dark aside .bg-white {
+  background-color: #111827 !important;
+}
+
+/* Sidebar text */
+html.dark aside .text-slate-900 {
+  color: #f8fafc !important;
+}
+
+html.dark aside .text-slate-800 {
+  color: #e2e8f0 !important;
+}
+
+html.dark aside .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+
+html.dark aside .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+/* Inputs / selects */
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #172033 !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* Document upload drop zone */
+html.dark [class*="border-dashed"] {
+  background-color: #172033 !important;
+  border-color: #475569 !important;
+}
+
+/* Tables */
+html.dark table {
+  background-color: #111827;
+  color: #e2e8f0;
+}
+
+html.dark th {
+  background-color: #172033 !important;
+  color: #94a3b8 !important;
+}
+
+html.dark td {
+  color: #cbd5e1 !important;
+  border-color: #273449 !important;
+}
+
+/* Cards */
+html.dark .rounded-xl.bg-white,
+html.dark .rounded-2xl.bg-white,
+html.dark .rounded-3xl.bg-white {
+  background-color: #111827 !important;
+}
+
+/* Dark-mode borders */
+html.dark .border-slate-200 {
+  border-color: #273449 !important;
+}
+
+html.dark .border-slate-300 {
+  border-color: #334155 !important;
+}
+
+/* =========================================================
+   EDMS — DEVICE RESPONSIVE LAYOUT LAYER
+   ========================================================= */
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+}
+
+@media (max-width: 1023px) {
+  main.ml-0,
+  main.ml-0.min-h-screen {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  main > .px-6,
+  main > .p-8 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 639px) {
+  body {
+    min-width: 320px;
+    font-size: 13px;
+  }
+
+  main > .px-6,
+  main > .p-8,
+  main > .px-5 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  main > .py-7,
+  main > .py-8 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+  }
+
+  .saas-surface,
+  section,
+  article {
+    max-width: 100%;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  button,
+  a,
+  select,
+  input[type="checkbox"],
+  input[type="radio"] {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
