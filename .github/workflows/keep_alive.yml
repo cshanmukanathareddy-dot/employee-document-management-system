@@ -1,0 +1,23 @@
+name: Keep Backend Warm 24/7
+
+on:
+  schedule:
+    # Ping every 10 minutes so Render free tier never detects 15 minutes of inactivity
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping Render Backend
+        run: |
+          echo "Sending keep-alive heartbeat to Render..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -m 60 "https://employee-document-management-system.onrender.com/health")
+          echo "Render responded with HTTP status: $STATUS"
+          if [ "$STATUS" -eq 200 ]; then
+            echo "Render backend is awake and healthy!"
+          else
+            echo "Ping delivered (status $STATUS)."
+          fi
