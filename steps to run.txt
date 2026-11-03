@@ -1,0 +1,77 @@
+EDMS - LOCAL RUN + ONLINE DEPLOYMENT
+====================================
+
+LOCAL DEVELOPMENT
+-----------------
+1. Create PostgreSQL database:
+   psql -U postgres
+   CREATE DATABASE employee_edms;
+   \q
+
+2. Backend:
+   cd backend
+   python -m venv venv
+   venv\Scripts\activate
+   pip install -r requirements.txt
+
+3. Copy backend/.env.example to backend/.env and set your local PostgreSQL credentials.
+   For local files use:
+   STORAGE_PROVIDER=local
+
+4. Start backend:
+   uvicorn app.main:app --reload
+
+5. Run the single migration once after the tables exist:
+   psql -U postgres -d employee_edms -f backend/migration.sql
+
+6. Frontend in another terminal:
+   cd frontend
+   npm install
+   npm run dev
+
+ONLINE PROTOTYPE
+----------------
+Frontend: Vercel
+Backend: Render
+Database: Neon PostgreSQL
+Files: Supabase Storage
+
+RENDER START COMMAND:
+uvicorn app.main:app --host 0.0.0.0 --port $PORT
+
+RENDER BUILD COMMAND:
+pip install -r requirements.txt
+
+RENDER ENVIRONMENT:
+DATABASE_URL=<Neon URL with sslmode=require>
+SECRET_KEY=<long random secret>
+JWT_ALGORITHM=HS256
+TOKEN_EXPIRE_MINUTES=60
+CORS_ORIGINS=https://YOUR-APP.vercel.app
+STORAGE_PROVIDER=supabase
+SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=<private service-role key>
+SUPABASE_BUCKET=edms-files
+UPLOAD_MAX_SIZE=104857600
+ZIP_MAX_FILES=1000
+ZIP_MAX_UNCOMPRESSED_SIZE=2147483648
+ADMIN_EMAIL=<client admin email>
+ADMIN_PASSWORD=<strong password>
+ADMIN_NAME=System Administrator
+
+VERCEL ENVIRONMENT:
+VITE_API_URL=https://YOUR-RENDER-SERVICE.onrender.com
+
+IMPORTANT SECURITY RULES
+------------------------
+- Never upload backend/.env to GitHub.
+- Never put SUPABASE_SERVICE_ROLE_KEY in React/frontend code.
+- Keep the Supabase bucket private.
+- Use a strong production SECRET_KEY.
+- Use a strong production admin password.
+- Do not use Render local disk for permanent employee files.
+- Run backend/migration.sql once on the Neon database after the base tables exist.
+
+TERMS AND CONDITIONS
+--------------------
+Registration includes a required Terms and Conditions checkbox. The frontend disables submission until it is checked, and the backend rejects registration if terms_accepted is false.
