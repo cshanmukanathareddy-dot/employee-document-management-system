@@ -11,10 +11,20 @@ if not settings.DATABASE_URL:
         "to the Render environment variables."
     )
 
+# SQLAlchemy 2.1 may select the Psycopg 3 dialect for a plain
+# postgresql:// URL. This project intentionally installs psycopg2-binary,
+# so select its dialect explicitly and avoid a missing 'psycopg' import
+# during Render startup. Explicitly configured non-default drivers are kept.
 _database_url = make_url(settings.DATABASE_URL)
+if (
+    _database_url.get_backend_name() in {"postgresql", "postgres"}
+    and _database_url.drivername in {"postgresql", "postgres"}
+):
+    _database_url = _database_url.set(drivername="postgresql+psycopg2")
+
 _connect_args = {}
 
-# Supabase PostgreSQL and pooler connections must use TLS. Keep local
+# Supabase PostgreSQL and pooler connections use TLS. Keep local
 # PostgreSQL development connections unchanged.
 if _database_url.get_backend_name() == "postgresql":
     _host = (_database_url.host or "").lower()
@@ -23,7 +33,7 @@ if _database_url.get_backend_name() == "postgresql":
         _connect_args["connect_timeout"] = 10
 
 engine = create_engine(
-    settings.DATABASE_URL,
+    _database_url,
     pool_pre_ping=True,
     pool_size=3,
     max_overflow=2,

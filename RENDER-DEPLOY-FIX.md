@@ -4,6 +4,11 @@ This package keeps the existing Vercel frontend and Supabase document delivery f
 
 ## 1. Render service settings
 
+### PostgreSQL startup-driver correction
+
+The Render log supplied for the previous deployment showed that the build completed, but the process crashed while importing the database engine with `ModuleNotFoundError: No module named 'psycopg'`. The project installs `psycopg2-binary`, while SQLAlchemy 2.1 can select the Psycopg 3 dialect from a plain `postgresql://` URL. The corrected database configuration explicitly selects `postgresql+psycopg2` for default PostgreSQL URLs. No extra driver package is required, and the bounded SQLAlchemy pool remains unchanged.
+
+
 For the existing Render Web Service, confirm:
 
 - **Root Directory:** `backend`
