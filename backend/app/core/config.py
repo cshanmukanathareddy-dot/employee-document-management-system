@@ -13,18 +13,29 @@ class Settings:
     BASE_DIR = BASE_DIR
     DATABASE_URL = os.getenv("DATABASE_URL")
 
-    CORS_ORIGINS = [
-        origin.strip()
-        for origin in os.getenv(
-            "CORS_ORIGINS",
-            "http://localhost:5173,"
-            "http://127.0.0.1:5173,"
-            "https://web-a2z.com,"
-            "https://www.web-a2z.com,"
-            "https://employee-document-management-system.vercel.app"
-        ).split(",")
+    # Always retain the production EDMS origins even when Render's
+    # CORS_ORIGINS variable is configured. Render environment variables
+    # commonly contain only one of the www/non-www variants; merging these
+    # defaults prevents production uploads from failing at the browser's
+    # OPTIONS preflight stage.
+    _configured_cors_origins = [
+        origin.strip().rstrip("/")
+        for origin in os.getenv("CORS_ORIGINS", "").split(",")
         if origin.strip()
     ]
+    _default_cors_origins = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://web-a2z.com",
+        "https://www.web-a2z.com",
+        "https://employee-document-management-system.vercel.app",
+    ]
+    CORS_ORIGINS = list(dict.fromkeys(
+        _configured_cors_origins + _default_cors_origins
+    ))
+    # Allow the owned production domain and its first-level subdomains
+    # (including www), without allowing arbitrary origins.
+    CORS_ORIGIN_REGEX = r"^https://([A-Za-z0-9-]+\.)?web-a2z\.com$"
 
     STORAGE_PROVIDER = os.getenv("STORAGE_PROVIDER", "local").lower()
     SUPABASE_URL = os.getenv("SUPABASE_URL")
@@ -44,7 +55,14 @@ class Settings:
     )
 
     UPLOAD_MAX_SIZE = int(
-        os.getenv("UPLOAD_MAX_SIZE", "524288000")  # 500 MiB
+        os.getenv("UPLOAD_MAX_SIZE", "524288000")  # 500 MiB for compatible storage providers
+    )
+
+    # Supabase Free projects cannot accept a single object larger than 50 MB.
+    # Use decimal MB (50,000,000 bytes) to stay safely within the plan limit.
+    # This is configurable for projects on plans with a higher configured limit.
+    SUPABASE_MAX_FILE_SIZE = int(
+        os.getenv("SUPABASE_MAX_FILE_SIZE", "50000000")
     )
 
     # ZIP safety limits

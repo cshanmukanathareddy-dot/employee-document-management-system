@@ -11,7 +11,13 @@ from app.models.document import Document
 from app.models.user import User
 from app.routes.auth import get_current_user
 from app.services.document_service import create_documents, delete_document, extract_document_archive
-from app.services.storage_service import get_file_path, save_upload_files, delete_files, cleanup_download_file
+from app.services.storage_service import (
+    get_file_path,
+    save_upload_files,
+    delete_files,
+    cleanup_download_file,
+    storage_upload_http_exception,
+)
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
 
@@ -74,6 +80,13 @@ def upload_document(
         documents = create_documents(db, current_user, file, category)
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error))
+    except Exception as error:
+        print(
+            "Employee document upload failed:",
+            type(error).__name__,
+            repr(error),
+        )
+        raise storage_upload_http_exception(error) from error
 
     is_archive = bool(documents and documents[0].is_archive)
 
@@ -134,6 +147,13 @@ def admin_upload_document(
         saved_files = save_upload_files(employee.directory_name, file)
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error))
+    except Exception as error:
+        print(
+            "Employee document upload failed:",
+            type(error).__name__,
+            repr(error),
+        )
+        raise storage_upload_http_exception(error) from error
 
     uploaded_size = sum(int(item["file_size"] or 0) for item in saved_files)
     current_usage = db.query(func.coalesce(func.sum(Document.file_size), 0)).filter(Document.owner_id == employee.id).scalar() or 0

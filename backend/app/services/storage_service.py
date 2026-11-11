@@ -11,7 +11,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any, BinaryIO
 from urllib.parse import quote
 
-from fastapi import UploadFile
+from fastapi import HTTPException, UploadFile
 
 from app.core.config import settings
 
@@ -119,6 +119,60 @@ def _storage_retry_count() -> int:
 
 def _storage_retry_delay() -> float:
     return max(0.1, float(getattr(settings, "STORAGE_RETRY_DELAY_SECONDS", 0.8)))
+
+
+def storage_upload_http_exception(error: Exception) -> HTTPException:
+    """Translate storage-provider failures into safe, useful API errors."""
+    error_text = str(error).lower()
+    response = getattr(error, "response", None)
+    status_code = getattr(error, "status_code", None) or getattr(response, "status_code", None)
+
+    if status_code == 413 or any(token in error_text for token in (
+        "entitytoolarge",
+        "payload too large",
+        "maximum allowed size",
+        "max file size",
+        "file size limit",
+        "413",
+    )):
+        return HTTPException(
+            status_code=413,
+            detail=(
+                "Supabase Storage rejected this file because it exceeds the "
+                "configured global or edms-files bucket upload limit. On "
+                "Supabase Free, the maximum is 50 MB per file."
+            ),
+        )
+
+    if any(token in error_text for token in (
+        "timeout", "timed out", "connecterror", "connection reset", "temporarily unavailable",
+    )):
+        return HTTPException(
+            status_code=503,
+            detail=(
+                "Supabase Storage could not be reached. Please retry the upload. "
+                "If this continues, check the Render service logs and Supabase status."
+            ),
+        )
+
+    if "not configured" in error_text:
+        return HTTPException(
+            status_code=503,
+            detail=(
+                "Supabase Storage is not configured correctly. Check SUPABASE_URL, "
+                "SUPABASE_SERVICE_ROLE_KEY and SUPABASE_BUCKET in the Render environment."
+            ),
+        )
+
+    return HTTPException(
+        status_code=502,
+        detail=(
+            "The document upload could not be completed because the storage or "
+            "database service returned an error. Check the Render logs for the "
+            "underlying error and verify the edms-files bucket, upload limits, "
+            "and available storage quota."
+        ),
+    )
 
 
 def _supabase_cache_path(path: str) -> Path:
@@ -617,7 +671,23 @@ def save_upload_files(directory_name: str, upload_file: UploadFile):
     )
     file_size = _upload_stream_size(upload_file)
 
-    if file_size > settings.UPLOAD_MAX_SIZE:
+    effective_max_size = settings.UPLOAD_MAX_SIZE
+    if settings.STORAGE_PROVIDER == "supabase":
+        effective_max_size = min(
+            effective_max_size,
+            int(getattr(settings, "SUPABASE_MAX_FILE_SIZE", 50_000_000)),
+        )
+
+    if file_size > effective_max_size:
+        if settings.STORAGE_PROVIDER == "supabase":
+            limit_mb = effective_max_size / 1_000_000
+            actual_mb = file_size / 1_000_000
+            raise ValueError(
+                f"This file is {actual_mb:.1f} MB, but the current Supabase "
+                f"upload limit is {limit_mb:.0f} MB per file. Supabase Free "
+                "supports a maximum of 50 MB per file. Please choose a smaller "
+                "file or use a storage plan with a higher configured limit."
+            )
         raise ValueError("File size exceeds the maximum allowed size.")
 
     file_obj = upload_file.file

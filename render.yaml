@@ -29,6 +29,8 @@ services:
         value: edms-files
       - key: UPLOAD_MAX_SIZE
         value: "524288000"
+      - key: SUPABASE_MAX_FILE_SIZE
+        value: "50000000"
       - key: ZIP_MAX_FILES
         value: "20000"
       - key: ZIP_MAX_UNCOMPRESSED_SIZE

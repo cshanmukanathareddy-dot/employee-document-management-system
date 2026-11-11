@@ -17,6 +17,7 @@ from app.services.storage_service import (
     delete_files,
     cleanup_download_file,
     create_employee_directory,
+    storage_upload_http_exception,
 )
 
 router = APIRouter(prefix="/admin-documents", tags=["Admin Documents"])
@@ -173,6 +174,15 @@ def upload_admin_document(
         saved_files = save_upload_files(admin.directory_name, file)
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error))
+    except Exception as error:
+        # Log the provider response server-side; return a safe, readable status
+        # so the browser does not report an opaque CORS/network failure.
+        print(
+            "Admin document storage upload failed:",
+            type(error).__name__,
+            repr(error),
+        )
+        raise storage_upload_http_exception(error) from error
 
     documents = []
     try:

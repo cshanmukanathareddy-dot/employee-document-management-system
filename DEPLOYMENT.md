@@ -56,7 +56,7 @@ SUPABASE_SERVICE_ROLE_KEY=<server-side service role key>
 
 The service-role key goes **only in Render**.
 
-Supabase Free projects currently have a 50 MB maximum individual file-size limit. Pro and higher plans can raise the global limit substantially. To accept files larger than 50 MB, upgrade the Supabase plan, raise the global Storage file-size limit, and set the `edms-files` bucket limit to the desired size. The application is configured for up to 500 MiB per file, but Supabase remains the final authority.
+Supabase Free projects have a maximum individual file-size limit of 50 MB. EDMS now enforces a 50,000,000-byte per-file limit whenever `STORAGE_PROVIDER=supabase`, so files over the Free-plan limit are rejected before calling Storage. `UPLOAD_MAX_SIZE=524288000` remains the application ceiling for storage providers that support larger objects. On an eligible paid Supabase plan, set `SUPABASE_MAX_FILE_SIZE` to the desired value and raise both the global Storage limit and the `edms-files` bucket limit accordingly.
 
 ## 2. Initialize the database
 
@@ -127,7 +127,7 @@ SECRET_KEY=<new long random secret>
 JWT_ALGORITHM=HS256
 TOKEN_EXPIRE_MINUTES=60
 
-CORS_ORIGINS=https://YOUR-APP.vercel.app
+CORS_ORIGINS=https://web-a2z.com,https://www.web-a2z.com,https://employee-document-management-system.vercel.app
 
 STORAGE_PROVIDER=supabase
 SUPABASE_URL=https://YOUR_PROJECT.supabase.co
@@ -135,6 +135,7 @@ SUPABASE_SERVICE_ROLE_KEY=<Supabase service-role key>
 SUPABASE_BUCKET=edms-files
 
 UPLOAD_MAX_SIZE=524288000
+SUPABASE_MAX_FILE_SIZE=50000000
 ZIP_MAX_FILES=20000
 ZIP_MAX_UNCOMPRESSED_SIZE=2147483648
 
@@ -320,7 +321,7 @@ contents inside the employee's directory.
 
 ## Upload and ZIP limits
 
-- Application per-file limit: **500 MiB** (`UPLOAD_MAX_SIZE=524288000`).
+- General application per-file ceiling: **500 MiB** (`UPLOAD_MAX_SIZE=524288000`). With Supabase Free, EDMS applies the lower `SUPABASE_MAX_FILE_SIZE` cap (50,000,000 bytes by default).
 - ZIP entry limit: **20,000 actual files** (`ZIP_MAX_FILES=20000`); directory entries do not consume the file count.
 - Password-protected ZIPs, including WinZip AES archives, can be extracted after the user enters the password when prompted. The password is sent only with the extraction request and is not saved.
 - ZIP total uncompressed limit remains **2 GiB** (`ZIP_MAX_UNCOMPRESSED_SIZE=2147483648`).

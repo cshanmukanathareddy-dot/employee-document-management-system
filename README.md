@@ -666,12 +666,12 @@ and keep the Supabase service-role key only on the backend/Render environment.
 
 ### Current upload limits
 
-The backend defaults to a 500 MiB maximum individual upload, a maximum of 20,000 actual ZIP files (directory entries excluded), and 2 GiB total uncompressed ZIP content. Large file handling uses streaming/spooled temporary files to reduce Render memory use. Supabase Free projects still enforce a 50 MB maximum individual file size; uploads above that require an eligible paid plan and matching global/bucket Storage limits.
+The general application upload ceiling is 500 MiB, with a maximum of 20,000 actual ZIP files (directory entries excluded) and 2 GiB total uncompressed ZIP content. When `STORAGE_PROVIDER=supabase`, EDMS additionally applies `SUPABASE_MAX_FILE_SIZE` (50 MB by default for Supabase Free). Large file handling uses streaming/spooled temporary files to reduce Render memory use. Uploads above Supabase's plan limit require an eligible paid plan and matching global/bucket Storage limits.
 
 
 ## Upload limits
 
-- Application per-file ceiling: 500 MiB (`UPLOAD_MAX_SIZE=524288000`).
+- General application per-file ceiling: 500 MiB (`UPLOAD_MAX_SIZE=524288000`). With Supabase Free, the effective per-file ceiling is the lower of this value and `SUPABASE_MAX_FILE_SIZE` (50,000,000 bytes by default).
 - ZIP limit: 20,000 actual files (`ZIP_MAX_FILES=20000`). Directory entries do not count.
 - Password-protected ZIP extraction supports WinZip AES via `pyzipper`; EDMS requests the password only when the user selects **Extract** and does not store it.
 - ZIP uncompressed content limit: 2 GiB (`ZIP_MAX_UNCOMPRESSED_SIZE=2147483648`).
