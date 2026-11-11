@@ -33,7 +33,7 @@ import { useAuth } from "../context/AuthContext";
 import api, { API_URL } from "../services/api";
 import { triggerBlobDownload } from "../utils/downloadHelper";
 import { buildPublicDocumentUrl } from "../utils/publicUrl";
-import { useZipExtraction } from "../utils/zipExtraction";
+import { useZipExtraction } from "../utils/zipExtraction.jsx";
 
 export default function Documents() {
   const { user } = useAuth();

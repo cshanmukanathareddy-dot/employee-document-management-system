@@ -41,7 +41,7 @@ import Sidebar from "../components/Sidebar";
 import api, { API_URL, getErrorMessage } from "../services/api";
 import { triggerBlobDownload } from "../utils/downloadHelper";
 import { buildPublicDocumentUrl } from "../utils/publicUrl";
-import { useZipExtraction } from "../utils/zipExtraction";
+import { useZipExtraction } from "../utils/zipExtraction.jsx";
 import {
   formatStorageBytes,
   formatStorageGb,

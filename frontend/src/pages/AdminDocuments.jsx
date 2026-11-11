@@ -23,7 +23,7 @@ import Sidebar from "../components/Sidebar";
 import api, { API_URL } from "../services/api";
 import { triggerBlobDownload } from "../utils/downloadHelper";
 import { buildPublicDocumentUrl } from "../utils/publicUrl";
-import { useZipExtraction } from "../utils/zipExtraction";
+import { useZipExtraction } from "../utils/zipExtraction.jsx";
 
 export default function AdminDocuments() {
   const { extractZip, passwordDialog } = useZipExtraction();
