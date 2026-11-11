@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+python-dotenv
+python-jose[cryptography]
+pwdlib[argon2]
+python-multipart
+email-validator
+openpyxl
+
+supabase>=2,<3
+httpx>=0.27,<1
+pyzipper==0.4.0
